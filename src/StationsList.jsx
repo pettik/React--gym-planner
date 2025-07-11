@@ -1,11 +1,13 @@
 import React from "react";
-import { stations, exercises, bodyParts } from "./seedData";
+import useStations from "./hooks/useStations";
+import { exercises, bodyParts } from "./seedData";
 
 // Pomocné funkce pro lookup
 const getExercise = (id) => exercises.find((ex) => ex.id === id);
 const getBodyPart = (id) => bodyParts.find((bp) => bp.id === id);
 
 export default function StationsList() {
+  const { stations } = useStations();
   return (
     <div>
       <h2>Přehled stanovišť</h2>
