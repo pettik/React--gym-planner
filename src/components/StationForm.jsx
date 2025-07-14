@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useStations from "../hooks/useStations";
+import { v4 as uuidv4 } from 'uuid';
 
 const StationForm = () => {
 
@@ -12,7 +13,8 @@ const StationForm = () => {
 return(
 <form onSubmit={(e) => {
   e.preventDefault();
-  addStation({ id: Date.now().toString(), name, description, exerciseIds: [] });
+  addStation({ id: uuidv4(), name, description, exerciseIds: [] });
+
   setName("");
   setDescription("");
 }}>
