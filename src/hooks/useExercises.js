@@ -2,16 +2,18 @@ import { useState, useEffect} from 'react';
 import {exercises as seedExercises} from './../seedData';
 
 
-const useExcersices = () => {
+const useExercises  = () => {
 
     const addExercise = (exercise) => {
-
+      setExercises(prev => [...prev, exercise]);
     }
     const updateExercise = (id, updatedFields) => {
-
+      setExercises(prev =>
+        prev.map(ex => ex.id === id ? { ...ex, ...updatedFields } : ex)
+      );
     }
     const deleteExercise = (id) => {
-
+      setExercises(prev => prev.filter(ex => ex.id !== id));
     }
 
 
@@ -20,8 +22,12 @@ const useExcersices = () => {
         return stored ? JSON.parse(stored) : seedExercises;
       });
 
+      useEffect(() => {
+        localStorage.setItem("exercises", JSON.stringify(exercises));
+      }, [exercises]);
+
       return { exercises, addExercise, updateExercise, deleteExercise }
 
 
 }
-export default useExcersices;
+export default useExercises;
