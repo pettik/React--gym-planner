@@ -7,8 +7,8 @@ import { bodyParts } from "./../seedData";
 const getBodyPart = (id) => bodyParts.find(bp => bp.id === id);
 const getStation = (id, stations) => stations.find(st => st.id === id);
 
-export default function ExercisesList() {
-  const { exercises, deleteExercise  } = useExercises();
+export default function ExercisesList({ onEdit }) {
+    const { exercises, deleteExercise  } = useExercises();
   const { stations } = useStations();
 
 
@@ -25,6 +25,7 @@ export default function ExercisesList() {
             <li><em>Stanoviště:</em> {ex.stationIds.map(id => getStation(id, stations)?.name).join(", ")}</li>
           </ul>
           <button onClick={() => deleteExercise(ex.id)}>Smazat</button>
+          <button onClick={() => onEdit(ex)}>Upravit</button>
         </li>
         ))}
       </ul>

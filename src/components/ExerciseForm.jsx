@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useExercises from "../hooks/useExercises";
 import { v4 as uuidv4 } from 'uuid';
 import { bodyParts } from "./../seedData";
@@ -6,17 +6,35 @@ import useStations from "../hooks/useStations";
 
 
 
-const ExerciseForm = () => {
-    const [name, setName] = useState('');
+const ExerciseForm = ({ editExercise, clearEdit }) => {
+  const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [bodyPartIds, setBodyPartIds] = useState([]);
     const [stationIds, setStationIds] = useState([]);
-    const {addExercise} = useExercises();
+    const {addExercise, updateExercise } = useExercises();
     const { stations } = useStations();
+
+    useEffect(() => {
+      if (editExercise) {
+        setName(editExercise.name);
+        setDescription(editExercise.description);
+        setBodyPartIds(editExercise.bodyPartIds || []);
+        setStationIds(editExercise.stationIds || []);
+      }
+    }, [editExercise]);
+
+
 return(
 <form onSubmit={(e) => {
   e.preventDefault();
-  addExercise({ id: uuidv4(), name, description, bodyPartIds, stationIds });
+
+  if (editExercise) {
+    updateExercise(editExercise.id, { name, description, bodyPartIds, stationIds });
+    clearEdit();
+  } else {
+    addExercise({ id: uuidv4(), name, description, bodyPartIds, stationIds });
+  }
+
   setName("");
   setDescription("");
   setBodyPartIds([]);
@@ -47,7 +65,7 @@ return(
     ))}
   </select>
 </label>
-    <input type="submit" />
+<input type="submit" value={editExercise ? "Uložit změny" : "Přidat cvik"} />
 </form>)
 }
 
