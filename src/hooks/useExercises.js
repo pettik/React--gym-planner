@@ -4,6 +4,7 @@ import {exercises as seedExercises} from './../seedData';
 
 const useExercises  = () => {
 
+
     const addExercise = (exercise) => {
       setExercises(prev => [...prev, exercise]);
     }

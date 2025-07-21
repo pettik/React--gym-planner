@@ -8,8 +8,9 @@ const getBodyPart = (id) => bodyParts.find(bp => bp.id === id);
 const getStation = (id, stations) => stations.find(st => st.id === id);
 
 export default function ExercisesList() {
-  const { exercises } = useExercises();
+  const { exercises, deleteExercise  } = useExercises();
   const { stations } = useStations();
+
 
   return (
     <div>
@@ -17,13 +18,14 @@ export default function ExercisesList() {
       <ul>
         {exercises.map(ex => (
           <li key={ex.id} style={{ marginBottom: "1.5rem" }}>
-            <strong>{ex.name}</strong> <br />
-            <small>{ex.description}</small>
-            <ul>
-              <li><em>Partie:</em> {ex.bodyPartIds.map(id => getBodyPart(id)?.name).join(", ")}</li>
-              <li><em>Stanoviště:</em> {ex.stationIds.map(id => getStation(id, stations)?.name).join(", ")}</li>
-            </ul>
-          </li>
+          <strong>{ex.name}</strong> <br />
+          <small>{ex.description}</small>
+          <ul>
+            <li><em>Partie:</em> {ex.bodyPartIds.map(id => getBodyPart(id)?.name).join(", ")}</li>
+            <li><em>Stanoviště:</em> {ex.stationIds.map(id => getStation(id, stations)?.name).join(", ")}</li>
+          </ul>
+          <button onClick={() => deleteExercise(ex.id)}>Smazat</button>
+        </li>
         ))}
       </ul>
     </div>
