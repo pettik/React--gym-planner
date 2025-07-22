@@ -7,6 +7,11 @@ import { bodyParts } from "./../seedData";
 const getBodyPart = (id) => bodyParts.find(bp => bp.id === id);
 const getStation = (id, stations) => stations.find(st => st.id === id);
 
+const [primaryBodyPartId, setPrimaryBodyPartId] = useState('');
+const [secondaryBodyPartIds, setSecondaryBodyPartIds] = useState([]);
+
+
+
 export default function ExercisesList({ onEdit }) {
     const { exercises, deleteExercise  } = useExercises();
   const { stations } = useStations();
