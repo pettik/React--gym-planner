@@ -1,20 +1,14 @@
-import React from "react";
+import  {useState} from "react";
 import useExercises from "./../hooks/useExercises"
 import useStations from "./../hooks/useStations";
 import { bodyParts } from "./../seedData";
+
 
 // Pomocné funkce
 const getBodyPart = (id) => bodyParts.find(bp => bp.id === id);
 const getStation = (id, stations) => stations.find(st => st.id === id);
 
-const [primaryBodyPartId, setPrimaryBodyPartId] = useState('');
-const [secondaryBodyPartIds, setSecondaryBodyPartIds] = useState([]);
-
-
-
 export default function ExercisesList({ onEdit }) {
-    const { exercises, deleteExercise  } = useExercises();
-  const { stations } = useStations();
 
 
   return (

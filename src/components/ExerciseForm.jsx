@@ -9,7 +9,8 @@ import useStations from "../hooks/useStations";
 const ExerciseForm = ({ editExercise, clearEdit }) => {
   const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [bodyPartIds, setBodyPartIds] = useState([]);
+    const [primaryBodyPartId, setPrimaryBodyPartId] = useState('');
+    const [secondaryBodyPartIds, setSecondaryBodyPartIds] = useState([]);
     const [stationIds, setStationIds] = useState([]);
     const {addExercise, updateExercise } = useExercises();
     const { stations } = useStations();
@@ -18,8 +19,8 @@ const ExerciseForm = ({ editExercise, clearEdit }) => {
       if (editExercise) {
         setName(editExercise.name);
         setDescription(editExercise.description);
-        setBodyPartIds(editExercise.bodyPartIds || []);
-        setStationIds(editExercise.stationIds || []);
+        setPrimaryBodyPartId(editExercise.primaryBodyPartId || '');
+        setSecondaryBodyPartIds(editExercise.secondaryBodyPartIds || []);        setStationIds(editExercise.stationIds || []);
       }
     }, [editExercise]);
 
@@ -43,10 +44,20 @@ return(
     <input type="text" placeholder="název cviku" value={name} onChange={(e) => setName(e.target.value)}/>
     <input type="text" placeholder="popis cviku" value={description} onChange={(e) => setDescription(e.target.value)} />
     <label>
-  Partie:
-  <select multiple value={bodyPartIds} onChange={(e) => {
-    const options = Array.from(e.target.selectedOptions, option => option.value);
-    setBodyPartIds(options);
+  Hlavní partie:
+  <select value={primaryBodyPartId} onChange={(e) => setPrimaryBodyPartId(e.target.value)}>
+    <option value="">-- Vyber hlavní partii --</option>
+    {bodyParts.map(part => (
+      <option key={part.id} value={part.id}>{part.name}</option>
+    ))}
+  </select>
+</label>
+
+<label>
+  Vedlejší partie:
+  <select multiple value={secondaryBodyPartIds} onChange={(e) => {
+    const selected = Array.from(e.target.selectedOptions, option => option.value);
+    setSecondaryBodyPartIds(selected);
   }}>
     {bodyParts.map(part => (
       <option key={part.id} value={part.id}>{part.name}</option>
