@@ -4,11 +4,14 @@ import useStations from "./../hooks/useStations";
 import { bodyParts } from "./../seedData";
 
 
+
 // Pomocné funkce
 const getBodyPart = (id) => bodyParts.find(bp => bp.id === id);
 const getStation = (id, stations) => stations.find(st => st.id === id);
 
 export default function ExercisesList({ onEdit }) {
+  const { exercises, deleteExercise } = useExercises();
+  const { stations } = useStations();
 
 
   return (
