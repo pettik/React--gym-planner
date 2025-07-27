@@ -26,7 +26,7 @@ const ExerciseForm = ({ editExercise, clearEdit }) => {
 
 
 return(
-<form onSubmit={(e) => {
+<form className="space-y-4" onSubmit={(e) => {
   e.preventDefault();
 
   if (editExercise) {
@@ -55,11 +55,11 @@ return(
 setSecondaryBodyPartIds([]);
   setStationIds([]);
 }}>
-    <input type="text" placeholder="název cviku" value={name} onChange={(e) => setName(e.target.value)}/>
+    <input type="text" className="input input-bordered w-full" placeholder="název cviku" value={name} onChange={(e) => setName(e.target.value)}/>
     <input type="text" placeholder="popis cviku" value={description} onChange={(e) => setDescription(e.target.value)} />
     <label>
   Hlavní partie:
-  <select value={primaryBodyPartId} onChange={(e) => setPrimaryBodyPartId(e.target.value)}>
+  <select className="select select-bordered w-full" value={primaryBodyPartId} onChange={(e) => setPrimaryBodyPartId(e.target.value)}>
     <option value="">-- Vyber hlavní partii --</option>
     {bodyParts.map(part => (
       <option key={part.id} value={part.id}>{part.name}</option>
