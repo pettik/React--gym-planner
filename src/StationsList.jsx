@@ -20,10 +20,12 @@ export default function StationsList() {
               {station.exerciseIds.map((eid) => {
                 const ex = getExercise(eid);
                 return (
-                  <li key={eid}>
-                    {ex.name} –{" "}
-                    {ex.bodyPartIds.map((bpid) => getBodyPart(bpid)?.name).join(", ")}
-                  </li>
+
+<li key={eid}>
+{ex.name} –
+<em>Hlavní partie:</em> {getBodyPart(ex.primaryBodyPartId)?.name},
+<em> vedlejší partie:</em> {(ex.secondaryBodyPartIds || []).map(id => getBodyPart(id)?.name).join(", ")}
+</li>
                 );
               })}
             </ul>

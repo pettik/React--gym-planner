@@ -30,15 +30,29 @@ return(
   e.preventDefault();
 
   if (editExercise) {
-    updateExercise(editExercise.id, { name, description, bodyPartIds, stationIds });
+    updateExercise(editExercise.id, {
+      name,
+      description,
+      primaryBodyPartId,
+      secondaryBodyPartIds,
+      stationIds
+    });
     clearEdit();
   } else {
-    addExercise({ id: uuidv4(), name, description, bodyPartIds, stationIds });
+    addExercise({
+      id: uuidv4(),
+      name,
+      description,
+      primaryBodyPartId,
+      secondaryBodyPartIds,
+      stationIds
+    });
   }
 
   setName("");
   setDescription("");
-  setBodyPartIds([]);
+  setPrimaryBodyPartId('');
+setSecondaryBodyPartIds([]);
   setStationIds([]);
 }}>
     <input type="text" placeholder="název cviku" value={name} onChange={(e) => setName(e.target.value)}/>
