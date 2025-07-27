@@ -1,31 +1,31 @@
-import React from "react";
-import useStations from "./hooks/useStations";
-import { exercises, bodyParts } from "./seedData";
 
-// Pomocné funkce pro lookup
-const getExercise = (id) => exercises.find((ex) => ex.id === id);
-const getBodyPart = (id) => bodyParts.find((bp) => bp.id === id);
+import React from "react";
+import { stations, exercises, bodyParts } from "./seedData";
+
+const getExercise = (id) => exercises.find((e) => e.id === id);
+const getBodyPart = (id) => bodyParts.find((b) => b.id === id)?.name;
 
 export default function StationsList() {
-  const { stations } = useStations();
   return (
     <div>
+      <h1>Posilovna GYM 1</h1>
       <h2>Přehled stanovišť</h2>
       <ul>
-        {stations.map((station) => (
+        {stations.map((station, idx) => (
           <li key={station.id} style={{ marginBottom: "1.5rem" }}>
-            <strong>{station.name}</strong> <br />
+            <strong>#{idx + 1} {station.name}</strong> <br />
             <small>{station.description}</small>
             <ul>
               {station.exerciseIds.map((eid) => {
                 const ex = getExercise(eid);
                 return (
-
-<li key={eid}>
-{ex.name} –
-<em>Hlavní partie:</em> {getBodyPart(ex.primaryBodyPartId)?.name},
-<em> vedlejší partie:</em> {(ex.secondaryBodyPartIds || []).map(id => getBodyPart(id)?.name).join(", ")}
-</li>
+                  <li key={eid}>
+                    {ex.name} –{" "}
+                    <em>Primární: {getBodyPart(ex.primaryBodyPartId)}</em>
+                    {ex.secondaryBodyPartIds.length > 0 && (
+                      <> | <em>Vedlejší: {ex.secondaryBodyPartIds.map(getBodyPart).join(", ")}</em></>
+                    )}
+                  </li>
                 );
               })}
             </ul>

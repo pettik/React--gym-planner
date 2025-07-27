@@ -1,86 +1,63 @@
+
 import { useState } from "react";
 import { bodyParts } from "../seedData";
-import useExercises from "../hooks/useExercises";
-import useStations from "../hooks/useStations";
+import { exercises } from "../seedData";
+
+const shuffle = (array) => [...array].sort(() => 0.5 - Math.random());
 
 const WorkoutGenerator = () => {
-  const [selectedParts, setSelectedParts] = useState([]);
+  const [part1, setPart1] = useState("");
+  const [part2, setPart2] = useState("");
   const [workout, setWorkout] = useState([]);
-
-  const { exercises } = useExercises();
-  const { stations } = useStations();
-
-  const togglePart = (id) => {
-    setSelectedParts((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  };
+  const [usedExerciseIds, setUsedExerciseIds] = useState(new Set());
 
   const generateWorkout = () => {
-    // krok 1: cviky s hlavní partii
-    const primary = exercises.filter((ex) =>
-      selectedParts.includes(ex.primaryBodyPartId)
-    );
+    const isUsed = (ex) => usedExerciseIds.has(ex.id);
 
-    // krok 2: cviky s vedlejší partii
-    const secondary = exercises.filter(
-      (ex) =>
-        ex.secondaryBodyPartIds?.some((id) => selectedParts.includes(id)) &&
-        !selectedParts.includes(ex.primaryBodyPartId)
-    );
+    const primary1 = shuffle(exercises.filter((e) => e.primaryBodyPartId === part1 && !isUsed(e))).slice(0, 2);
+    const secondary1 = shuffle(exercises.filter((e) => e.secondaryBodyPartIds.includes(part1) && !isUsed(e))).slice(0, 1);
+    const primary2 = shuffle(exercises.filter((e) => e.primaryBodyPartId === part2 && !isUsed(e))).slice(0, 2);
+    const secondary2 = shuffle(exercises.filter((e) => e.secondaryBodyPartIds.includes(part2) && !isUsed(e))).slice(0, 1);
+    const core = shuffle(exercises.filter((e) => e.primaryBodyPartId === "bp7" && !isUsed(e))).slice(0, 1);
 
-    // krok 3: přidání např. cviku na břicho (např. id="bp7"), pokud máme
-    const core = exercises.find((ex) =>
-      ["bp7", "bp8"].includes(ex.primaryBodyPartId)
-    );
+    const newWorkout = [...primary1, ...secondary1, ...primary2, ...secondary2, ...core];
 
-    const plan = [
-      ...primary.slice(0, 3),
-      ...secondary.slice(0, 2),
-      ...(core ? [core] : []),
-    ];
-
-    setWorkout(plan);
+    setWorkout(newWorkout);
+    setUsedExerciseIds(new Set([...usedExerciseIds, ...newWorkout.map((ex) => ex.id)]));
   };
 
-  const getBodyPartName = (id) => bodyParts.find((bp) => bp.id === id)?.name;
+  const getPartName = (id) => bodyParts.find((b) => b.id === id)?.name;
 
   return (
     <div>
-      <h2>Generátor tréninku</h2>
-      <p>Vyber svalové partie:</p>
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        {bodyParts.map((part) => (
-          <label key={part.id}>
-            <input
-              type="checkbox"
-              value={part.id}
-              checked={selectedParts.includes(part.id)}
-              onChange={() => togglePart(part.id)}
-            />
-            {part.name}
-          </label>
+      <h2>Vygeneruj tréninkový plán</h2>
+      <select value={part1} onChange={(e) => setPart1(e.target.value)}>
+        <option value="">-- Hlavní partie 1 --</option>
+        {bodyParts.map((b) => (
+          <option key={b.id} value={b.id}>
+            {b.name}
+          </option>
         ))}
-      </div>
-
-      <button onClick={generateWorkout} style={{ marginTop: "1rem" }}>
-        Vygenerovat plán
-      </button>
+      </select>
+      <select value={part2} onChange={(e) => setPart2(e.target.value)}>
+        <option value="">-- Hlavní partie 2 --</option>
+        {bodyParts.map((b) => (
+          <option key={b.id} value={b.id}>
+            {b.name}
+          </option>
+        ))}
+      </select>
+      <button onClick={generateWorkout}>Vygeneruj cviky</button>
 
       {workout.length > 0 && (
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Navržený trénink:</h3>
+        <div>
+          <h3>Tréninkový plán</h3>
           <ol>
-            {workout.map((ex) => (
+            {workout.map((ex, idx) => (
               <li key={ex.id}>
-                <strong>{ex.name}</strong> – {ex.description}
-                <br />
-                <em>
-                  Hlavní: {getBodyPartName(ex.primaryBodyPartId)} | Vedlejší:{" "}
-                  {ex.secondaryBodyPartIds
-                    .map((id) => getBodyPartName(id))
-                    .join(", ")}
-                </em>
+                <strong>{ex.name}</strong> – {ex.description} <br />
+                <em>Primární: {getPartName(ex.primaryBodyPartId)}</em> |{" "}
+                <em>Vedlejší: {ex.secondaryBodyPartIds.map(getPartName).join(", ")}</em>
               </li>
             ))}
           </ol>
